@@ -18,6 +18,7 @@ local UICorner_Background = Instance.new("UICorner")
 local originalDistance = 100
 getgenv().bottleHealthEspVisible = true
 getgenv().bottleHealthEspDistance = originalDistance
+getgenv().bottleHealthVisible = true
 
 --Properties:
 
@@ -140,7 +141,7 @@ function giveESP(plr)
 				else
 					clone2.TextLabel.TextColor3 = Color3.fromRGB(255,255,255)
 				end
-				
+
 				local UIS = game:GetService("UserInputService")
 				UIS.InputBegan:connect(function(input, processed)
 					if not processed then
@@ -155,8 +156,10 @@ function giveESP(plr)
 				end)
 
 				if not getgenv().bottleHealthEspVisible then
-					clone.Enabled = false
 					clone2.Enabled = false
+				end
+				if not getgenv().bottleHealthVisible then
+					clone.Enabled = false
 				end
 
 				local MyPlayer = plr
@@ -221,7 +224,7 @@ function giveESP(plr)
 				else
 					clone2.TextLabel.TextColor3 = Color3.fromRGB(255,255,255)
 				end
-				
+
 				local UIS = game:GetService("UserInputService")
 				UIS.InputBegan:connect(function(input, processed)
 					if not processed then
@@ -236,8 +239,10 @@ function giveESP(plr)
 				end)
 
 				if not getgenv().bottleHealthEspVisible then
-					clone.Enabled = false
 					clone2.Enabled = false
+				end
+				if not getgenv().bottleHealthVisible then
+					clone.Enabled = false
 				end
 
 				local MyPlayer = plr
@@ -307,7 +312,6 @@ UIS.InputBegan:connect(function(input, processed)
 				for i, v in pairs(game.Players:GetPlayers()) do
 					repeat wait() until v.Character
 					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
-						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth").Enabled = true
 						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName").Enabled = true
 					end
 				end
@@ -315,8 +319,25 @@ UIS.InputBegan:connect(function(input, processed)
 				for i, v in pairs(game.Players:GetPlayers()) do
 					repeat wait() until v.Character
 					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
-						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth").Enabled = false
 						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName").Enabled = false
+					end
+				end
+			end
+		elseif input.KeyCode == Enum.KeyCode.F4 then
+			getgenv().bottleHealthVisible = not getgenv().bottleHealthVisible
+
+			if getgenv().bottleHealthVisible then
+				for i, v in pairs(game.Players:GetPlayers()) do
+					repeat wait() until v.Character
+					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
+						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth").Enabled = true
+					end
+				end
+			else
+				for i, v in pairs(game.Players:GetPlayers()) do
+					repeat wait() until v.Character
+					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
+						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth").Enabled = false
 					end
 				end
 			end
@@ -328,5 +349,5 @@ repeat wait() until game.Players.LocalPlayer
 wait(3)
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Bottle Health ESP",
-	Text = "f3 to toggle | + or = to increase | - to decrease range"
+	Text = "f3 for names | f4 for health | + or = to increase | - to decrease range"
 })
