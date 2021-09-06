@@ -2,28 +2,47 @@
 -- Version: 3.2
 
 -- Instances:
-if game.PlaceId == 6872265039 or game.PlaceId == 6872274481 then
-local BillboardGui = Instance.new("BillboardGui")
+
+local BillboardGuiName = Instance.new("BillboardGui")
+local TextLabel = Instance.new("TextLabel")
+local BillboardGuiHealth = Instance.new("BillboardGui")
 local Handler = Instance.new("Frame")
 local HealthSystem = Instance.new("Frame")
 local HP = Instance.new("TextLabel")
-local TextLabel = Instance.new("TextLabel")
 local HealthBar = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")
 local TextLabel_2 = Instance.new("TextLabel")
 
 --Properties:
 
-BillboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-BillboardGui.Active = true
-BillboardGui.AlwaysOnTop = true
-BillboardGui.LightInfluence = 1.000
-BillboardGui.MaxDistance = 75.000
-BillboardGui.Size = UDim2.new(0, 200, 0, 50)
-BillboardGui.StudsOffset = Vector3.new(0, 3, 0)
+BillboardGuiName.Name = "BillboardGuiName"
+BillboardGuiName.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+BillboardGuiName.AlwaysOnTop = true
+BillboardGuiName.LightInfluence = 1.000
+BillboardGuiName.Size = UDim2.new(0, 200, 0, 50)
+BillboardGuiName.StudsOffset = Vector3.new(0, 3, 0)
+
+TextLabel.Parent = BillboardGuiName
+TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BackgroundTransparency = 1.000
+TextLabel.Position = UDim2.new(0, 0, -0.899999976, 0)
+TextLabel.Size = UDim2.new(0, 200, 0, 50)
+TextLabel.Font = Enum.Font.SourceSansLight
+TextLabel.Text = "Name"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 20.000
+
+BillboardGuiHealth.Name = "BillboardGuiHealth"
+BillboardGuiHealth.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+BillboardGuiHealth.Active = true
+BillboardGuiHealth.AlwaysOnTop = true
+BillboardGuiHealth.LightInfluence = 1.000
+BillboardGuiHealth.MaxDistance = 100.000
+BillboardGuiHealth.Size = UDim2.new(0, 200, 0, 50)
+BillboardGuiHealth.StudsOffset = Vector3.new(0, 3, 0)
 
 Handler.Name = "Handler"
-Handler.Parent = BillboardGui
+Handler.Parent = BillboardGuiHealth
 Handler.BackgroundColor3 = Color3.fromRGB(31, 31, 31)
 Handler.BackgroundTransparency = 1.000
 Handler.BorderColor3 = Color3.fromRGB(48, 48, 48)
@@ -55,19 +74,6 @@ HP.TextScaled = true
 HP.TextSize = 10.000
 HP.TextWrapped = true
 
-TextLabel.Parent = HealthSystem
-TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel.BackgroundTransparency = 1.000
-TextLabel.Position = UDim2.new(0, 0, 0.0367482938, 0)
-TextLabel.Size = UDim2.new(1.00000012, 0, 0.97408843, 0)
-TextLabel.ZIndex = 100
-TextLabel.Font = Enum.Font.GothamBlack
-TextLabel.Text = "0/0"
-TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel.TextScaled = true
-TextLabel.TextSize = 14.000
-TextLabel.TextWrapped = true
-
 HealthBar.Name = "HealthBar"
 HealthBar.Parent = HealthSystem
 HealthBar.BackgroundColor3 = Color3.fromRGB(68, 204, 0)
@@ -80,28 +86,40 @@ HealthBar.ZIndex = 10
 
 UICorner.Parent = HealthBar
 
-TextLabel_2.Parent = Handler
+TextLabel_2.Parent = HealthSystem
 TextLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel_2.BackgroundTransparency = 1.000
-TextLabel_2.Position = UDim2.new(0, 0, -2.20000005, 0)
-TextLabel_2.Size = UDim2.new(0, 200, 0, 50)
-TextLabel_2.Font = Enum.Font.SourceSansLight
-TextLabel_2.Text = "Name"
+TextLabel_2.Position = UDim2.new(0, 0, 0.0367482938, 0)
+TextLabel_2.Size = UDim2.new(1.00000012, 0, 0.97408843, 0)
+TextLabel_2.ZIndex = 100
+TextLabel_2.Font = Enum.Font.GothamBlack
+TextLabel_2.Text = "0/0"
 TextLabel_2.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel_2.TextSize = 25.000
+TextLabel_2.TextScaled = true
+TextLabel_2.TextSize = 14.000
+TextLabel_2.TextWrapped = true
+
+getgenv().bottleHealthEspVisible = true
 
 --Function
 function giveESP(plr)
 	if plr.Name ~= game.Players.LocalPlayer.Name then
 		if plr.Character then
-			if not plr.Character:WaitForChild("Head"):FindFirstChild("BillboardGui") then
-				local clone = BillboardGui:Clone()
+			if not plr.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") then
+				local clone = BillboardGuiHealth:Clone()
 				clone.Parent = plr.Character:WaitForChild("Head")
-				clone.Handler.TextLabel.Text = plr.Name
-				
+				local clone2 = BillboardGuiName:Clone()
+				clone2.TextLabel.Text = plr.Name
+				clone2.Parent = plr.Character:WaitForChild("Head")
+
+				if not getgenv().bottleHealthEspVisible then
+					clone.Enabled = false
+					clone2.Enabled = false
+				end
+
 				local MyPlayer = plr
-				local frame = plr.Character.Head.BillboardGui.Handler.HealthSystem.HealthBar
-				local text = plr.Character.Head.BillboardGui.Handler.HealthSystem.TextLabel
+				local frame = plr.Character.Head.BillboardGuiHealth.Handler.HealthSystem.HealthBar
+				local text = plr.Character.Head.BillboardGuiHealth.Handler.HealthSystem.TextLabel
 
 				local function UpdatePlayerInformation()
 					frame.BackgroundColor3 = Color3.fromRGB(85, 255, 127)
@@ -144,14 +162,21 @@ function giveESP(plr)
 		end
 
 		plr.CharacterAdded:Connect(function()
-			if not plr.Character:WaitForChild("Head"):FindFirstChild("BillboardGui") then
-				local clone = BillboardGui:Clone()
+			if not plr.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") then
+				local clone = BillboardGuiHealth:Clone()
 				clone.Parent = plr.Character:WaitForChild("Head")
-				clone.Handler.TextLabel.Text = plr.Name
-				
+				local clone2 = BillboardGuiName:Clone()
+				clone2.TextLabel.Text = plr.Name
+				clone2.Parent = plr.Character:WaitForChild("Head")
+
+				if not getgenv().bottleHealthEspVisible then
+					clone.Enabled = false
+					clone2.Enabled = false
+				end
+
 				local MyPlayer = plr
-				local frame = plr.Character.Head.BillboardGui.Handler.HealthSystem.HealthBar
-				local text = plr.Character.Head.BillboardGui.Handler.HealthSystem.TextLabel
+				local frame = plr.Character.Head.BillboardGuiHealth.Handler.HealthSystem.HealthBar
+				local text = plr.Character.Head.BillboardGuiHealth.Handler.HealthSystem.TextLabel
 
 				local function UpdatePlayerInformation()
 					frame.BackgroundColor3 = Color3.fromRGB(85, 255, 127)
@@ -203,4 +228,38 @@ end
 game.Players.PlayerAdded:Connect(function(aplr)
 	giveESP(aplr)
 end)
-end
+
+--Toggle Visiblity
+local UIS = game:GetService("UserInputService")
+
+UIS.InputBegan:connect(function(input, processed)
+	if not processed then
+		if input.KeyCode == Enum.KeyCode.F3 then
+			getgenv().bottleHealthEspVisible = not getgenv().bottleHealthEspVisible
+
+			if getgenv().bottleHealthEspVisible then
+				for i, v in pairs(game.Players:GetPlayers()) do
+					repeat wait() until v.Character
+					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
+						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth").Enabled = true
+						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName").Enabled = true
+					end
+				end
+			else
+				for i, v in pairs(game.Players:GetPlayers()) do
+					repeat wait() until v.Character
+					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
+						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth").Enabled = false
+						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName").Enabled = false
+					end
+				end
+			end
+		end
+	end
+end)
+repeat wait() until game.Players.LocalPlayer
+wait(6)
+game:GetService("StarterGui"):SetCore("SendNotification", {
+	Title = "Bottle Health ESP",
+	Text = "f3 to toggle now"
+})
