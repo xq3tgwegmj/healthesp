@@ -31,6 +31,8 @@ TextLabel.Font = Enum.Font.SourceSansLight
 TextLabel.Text = "Name"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextSize = 20.000
+TextLabel.TextStrokeTransparency = 0
+TextLabel.TextStrokeColor3 = Color3.fromRGB(72,72,72)
 
 BillboardGuiHealth.Name = "BillboardGuiHealth"
 BillboardGuiHealth.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -258,7 +260,7 @@ UIS.InputBegan:connect(function(input, processed)
 	end
 end)
 repeat wait() until game.Players.LocalPlayer
-wait(6)
+wait(3)
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Bottle Health ESP",
 	Text = "f3 to toggle now"
