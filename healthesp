@@ -1,0 +1,206 @@
+-- Gui to Lua
+-- Version: 3.2
+
+-- Instances:
+if game.PlaceId == 6872265039 or game.PlaceId == 6872274481 then
+local BillboardGui = Instance.new("BillboardGui")
+local Handler = Instance.new("Frame")
+local HealthSystem = Instance.new("Frame")
+local HP = Instance.new("TextLabel")
+local TextLabel = Instance.new("TextLabel")
+local HealthBar = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local TextLabel_2 = Instance.new("TextLabel")
+
+--Properties:
+
+BillboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+BillboardGui.Active = true
+BillboardGui.AlwaysOnTop = true
+BillboardGui.LightInfluence = 1.000
+BillboardGui.MaxDistance = 75.000
+BillboardGui.Size = UDim2.new(0, 200, 0, 50)
+BillboardGui.StudsOffset = Vector3.new(0, 3, 0)
+
+Handler.Name = "Handler"
+Handler.Parent = BillboardGui
+Handler.BackgroundColor3 = Color3.fromRGB(31, 31, 31)
+Handler.BackgroundTransparency = 1.000
+Handler.BorderColor3 = Color3.fromRGB(48, 48, 48)
+Handler.BorderSizePixel = 0
+Handler.Size = UDim2.new(0.699999988, 0, 0.400000006, 0)
+
+HealthSystem.Name = "HealthSystem"
+HealthSystem.Parent = Handler
+HealthSystem.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+HealthSystem.BackgroundTransparency = 1.000
+HealthSystem.BorderColor3 = Color3.fromRGB(60, 60, 60)
+HealthSystem.BorderSizePixel = 0
+HealthSystem.ClipsDescendants = true
+HealthSystem.Position = UDim2.new(0.200000003, 0, 0, 0)
+HealthSystem.Size = UDim2.new(1, 0, 0.699999988, 0)
+HealthSystem.ZIndex = 10
+
+HP.Name = "HP"
+HP.Parent = HealthSystem
+HP.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+HP.BackgroundTransparency = 1.000
+HP.Position = UDim2.new(-0.0372551009, 0, -0.181247398, 0)
+HP.Size = UDim2.new(0.287, 0, 1.40999997, 0)
+HP.ZIndex = 100
+HP.Font = Enum.Font.GothamBlack
+HP.Text = "+"
+HP.TextColor3 = Color3.fromRGB(255, 255, 255)
+HP.TextScaled = true
+HP.TextSize = 10.000
+HP.TextWrapped = true
+
+TextLabel.Parent = HealthSystem
+TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BackgroundTransparency = 1.000
+TextLabel.Position = UDim2.new(0, 0, 0.0367482938, 0)
+TextLabel.Size = UDim2.new(1.00000012, 0, 0.97408843, 0)
+TextLabel.ZIndex = 100
+TextLabel.Font = Enum.Font.GothamBlack
+TextLabel.Text = "0/0"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextScaled = true
+TextLabel.TextSize = 14.000
+TextLabel.TextWrapped = true
+
+HealthBar.Name = "HealthBar"
+HealthBar.Parent = HealthSystem
+HealthBar.BackgroundColor3 = Color3.fromRGB(68, 204, 0)
+HealthBar.BorderColor3 = Color3.fromRGB(20, 20, 20)
+HealthBar.BorderSizePixel = 0
+HealthBar.ClipsDescendants = true
+HealthBar.Position = UDim2.new(-0.00332951569, 0, 0, 0)
+HealthBar.Size = UDim2.new(1.00332952, 0, 1.0108372, 0)
+HealthBar.ZIndex = 10
+
+UICorner.Parent = HealthBar
+
+TextLabel_2.Parent = Handler
+TextLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel_2.BackgroundTransparency = 1.000
+TextLabel_2.Position = UDim2.new(0, 0, -2.20000005, 0)
+TextLabel_2.Size = UDim2.new(0, 200, 0, 50)
+TextLabel_2.Font = Enum.Font.SourceSansLight
+TextLabel_2.Text = "Name"
+TextLabel_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel_2.TextSize = 25.000
+
+--Function
+function giveESP(plr)
+	if plr.Name ~= game.Players.LocalPlayer.Name then
+		if plr.Character then
+			if not plr.Character:WaitForChild("Head"):FindFirstChild("BillboardGui") then
+				local clone = BillboardGui:Clone()
+				clone.Parent = plr.Character:WaitForChild("Head")
+				clone.Handler.TextLabel.Text = plr.Name
+				
+				local MyPlayer = plr
+				local frame = plr.Character.Head.BillboardGui.Handler.HealthSystem.HealthBar
+				local text = plr.Character.Head.BillboardGui.Handler.HealthSystem.TextLabel
+
+				local function UpdatePlayerInformation()
+					frame.BackgroundColor3 = Color3.fromRGB(85, 255, 127)
+				end
+
+				UpdatePlayerInformation()
+
+				local function onHealthChanged()
+					local human = MyPlayer.Character.Humanoid
+					local percent = human.Health / human.MaxHealth
+					text.Text = math.floor(human.Health).."/"..human.MaxHealth
+					frame.Size = UDim2.new(percent, 0, 1, 0)
+					if percent < .25 then
+						frame.BackgroundColor3 = Color3.fromRGB(255, 40, 20)
+					elseif percent < .5 then
+						frame.BackgroundColor3 = Color3.fromRGB(255, 255, 60)
+					else
+						frame.BackgroundColor3 = Color3.fromRGB(85, 255, 127)
+					end
+				end
+
+				local function onCharacterAdded(character)
+					local human = character:WaitForChild("Humanoid")
+					human.HealthChanged:Connect(onHealthChanged)
+					onHealthChanged()
+				end
+
+				MyPlayer.CharacterAdded:Connect(onCharacterAdded)
+				if MyPlayer.Character then
+					onCharacterAdded(MyPlayer.Character)
+				end
+
+				local humanoid = plr.Character.Humanoid
+				local currentHealth = humanoid.Health
+				humanoid.HealthChanged:Connect(function(health)
+					local change = math.abs(currentHealth - health)
+					currentHealth = health
+				end)
+			end
+		end
+
+		plr.CharacterAdded:Connect(function()
+			if not plr.Character:WaitForChild("Head"):FindFirstChild("BillboardGui") then
+				local clone = BillboardGui:Clone()
+				clone.Parent = plr.Character:WaitForChild("Head")
+				clone.Handler.TextLabel.Text = plr.Name
+				
+				local MyPlayer = plr
+				local frame = plr.Character.Head.BillboardGui.Handler.HealthSystem.HealthBar
+				local text = plr.Character.Head.BillboardGui.Handler.HealthSystem.TextLabel
+
+				local function UpdatePlayerInformation()
+					frame.BackgroundColor3 = Color3.fromRGB(85, 255, 127)
+				end
+
+				UpdatePlayerInformation()
+
+				local function onHealthChanged()
+					local human = MyPlayer.Character.Humanoid
+					local percent = human.Health / human.MaxHealth
+					text.Text = math.floor(human.Health).."/"..human.MaxHealth
+					frame.Size = UDim2.new(percent, 0, 1, 0)
+					if percent < .25 then
+						frame.BackgroundColor3 = Color3.fromRGB(255, 40, 20)
+					elseif percent < .5 then
+						frame.BackgroundColor3 = Color3.fromRGB(255, 255, 60)
+					else
+						frame.BackgroundColor3 = Color3.fromRGB(85, 255, 127)
+					end
+				end
+
+				local function onCharacterAdded(character)
+					local human = character:WaitForChild("Humanoid")
+					human.HealthChanged:Connect(onHealthChanged)
+					onHealthChanged()
+				end
+
+				MyPlayer.CharacterAdded:Connect(onCharacterAdded)
+				if MyPlayer.Character then
+					onCharacterAdded(MyPlayer.Character)
+				end
+
+				local humanoid = plr.Character.Humanoid
+				local currentHealth = humanoid.Health
+				humanoid.HealthChanged:Connect(function(health)
+					local change = math.abs(currentHealth - health)
+					currentHealth = health
+				end)
+			end
+		end)
+	end
+end
+
+--Players
+
+for i, v in pairs(game.Players:GetPlayers())  do
+	giveESP(v)
+end
+game.Players.PlayerAdded:Connect(function(aplr)
+	giveESP(aplr)
+end)
+end
