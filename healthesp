@@ -15,6 +15,10 @@ local TextLabel_2 = Instance.new("TextLabel")
 local Background = Instance.new("Frame")
 local UICorner_Background = Instance.new("UICorner")
 
+local originalDistance = 100
+getgenv().bottleHealthEspVisible = true
+getgenv().bottleHealthEspDistance = originalDistance
+
 --Properties:
 
 BillboardGuiName.Name = "BillboardGuiName"
@@ -41,7 +45,7 @@ BillboardGuiHealth.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 BillboardGuiHealth.Active = true
 BillboardGuiHealth.AlwaysOnTop = true
 BillboardGuiHealth.LightInfluence = 1.000
-BillboardGuiHealth.MaxDistance = 100.000
+BillboardGuiHealth.MaxDistance = getgenv().bottleHealthEspDistance
 BillboardGuiHealth.Size = UDim2.new(0, 200, 0, 50)
 BillboardGuiHealth.StudsOffset = Vector3.new(0, 3, 0)
 
@@ -115,8 +119,6 @@ Background.ZIndex = 9
 
 UICorner_Background.Parent = Background
 
-getgenv().bottleHealthEspVisible = true
-
 --Function
 function giveESP(plr)
 	if plr.Name ~= game.Players.LocalPlayer.Name then
@@ -138,6 +140,19 @@ function giveESP(plr)
 				else
 					clone2.TextLabel.TextColor3 = Color3.fromRGB(255,255,255)
 				end
+				
+				local UIS = game:GetService("UserInputService")
+				UIS.InputBegan:connect(function(input, processed)
+					if not processed then
+						if input.KeyCode == Enum.KeyCode.Equals then
+							getgenv().bottleHealthEspDistance = getgenv().bottleHealthEspDistance + 10
+							clone.MaxDistance = getgenv().bottleHealthEspDistance
+						elseif input.KeyCode == Enum.KeyCode.Minus then
+							getgenv().bottleHealthEspDistance = originalDistance
+							clone.MaxDistance = getgenv().bottleHealthEspDistance
+						end
+					end
+				end)
 
 				if not getgenv().bottleHealthEspVisible then
 					clone.Enabled = false
@@ -206,6 +221,19 @@ function giveESP(plr)
 				else
 					clone2.TextLabel.TextColor3 = Color3.fromRGB(255,255,255)
 				end
+				
+				local UIS = game:GetService("UserInputService")
+				UIS.InputBegan:connect(function(input, processed)
+					if not processed then
+						if input.KeyCode == Enum.KeyCode.Equals then
+							getgenv().bottleHealthEspDistance = getgenv().bottleHealthEspDistance + 10
+							clone.MaxDistance = getgenv().bottleHealthEspDistance
+						elseif input.KeyCode == Enum.KeyCode.Minus then
+							getgenv().bottleHealthEspDistance = originalDistance
+							clone.MaxDistance = getgenv().bottleHealthEspDistance
+						end
+					end
+				end)
 
 				if not getgenv().bottleHealthEspVisible then
 					clone.Enabled = false
@@ -295,9 +323,10 @@ UIS.InputBegan:connect(function(input, processed)
 		end
 	end
 end)
+
 repeat wait() until game.Players.LocalPlayer
 wait(3)
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Bottle Health ESP",
-	Text = "f3 to toggle now"
+	Text = "f3 to toggle | + or = to increase | - to decrease range"
 })
