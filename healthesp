@@ -127,6 +127,17 @@ function giveESP(plr)
 				local clone2 = BillboardGuiName:Clone()
 				clone2.TextLabel.Text = plr.Name
 				clone2.Parent = plr.Character:WaitForChild("Head")
+				if plr.Team then
+					if plr.Team.Name == "Neutral" then
+						clone2.TextLabel.TextColor3 = Color3.fromRGB(255,255,255)
+					else
+						local Color = plr.Team.TeamColor.Color
+						local R,G,B R = Color.R * 255 G = Color.G * 255 B = Color.B * 255 
+						clone2.TextLabel.TextColor3 = Color3.fromRGB(R,G,B)
+					end
+				else
+					clone2.TextLabel.TextColor3 = Color3.fromRGB(255,255,255)
+				end
 
 				if not getgenv().bottleHealthEspVisible then
 					clone.Enabled = false
@@ -184,6 +195,17 @@ function giveESP(plr)
 				local clone2 = BillboardGuiName:Clone()
 				clone2.TextLabel.Text = plr.Name
 				clone2.Parent = plr.Character:WaitForChild("Head")
+				if plr.Team then
+					if plr.Team.Name == "Neutral" then
+						clone2.TextLabel.TextColor3 = Color3.fromRGB(255,255,255)
+					else
+						local Color = plr.Team.TeamColor.Color
+						local R,G,B R = Color.R * 255 G = Color.G * 255 B = Color.B * 255 
+						clone2.TextLabel.TextColor3 = Color3.fromRGB(R,G,B)
+					end
+				else
+					clone2.TextLabel.TextColor3 = Color3.fromRGB(255,255,255)
+				end
 
 				if not getgenv().bottleHealthEspVisible then
 					clone.Enabled = false
