@@ -298,51 +298,6 @@ game.Players.PlayerAdded:Connect(function(aplr)
 	giveESP(aplr)
 end)
 
---Toggle Visiblity
-local UIS = game:GetService("UserInputService")
-
-UIS.InputBegan:connect(function(input, processed)
-	if not processed then
-		if input.KeyCode == Enum.KeyCode.F3 then
-			getgenv().bottleHealthEspVisible = not getgenv().bottleHealthEspVisible
-
-			if getgenv().bottleHealthEspVisible then
-				for i, v in pairs(game.Players:GetPlayers()) do
-					repeat wait() until v.Character
-					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
-						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName").Enabled = true
-					end
-				end
-			else
-				for i, v in pairs(game.Players:GetPlayers()) do
-					repeat wait() until v.Character
-					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
-						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName").Enabled = false
-					end
-				end
-			end
-		elseif input.KeyCode == Enum.KeyCode.F4 then
-			getgenv().bottleHealthVisible = not getgenv().bottleHealthVisible
-
-			if getgenv().bottleHealthVisible then
-				for i, v in pairs(game.Players:GetPlayers()) do
-					repeat wait() until v.Character
-					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
-						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth").Enabled = true
-					end
-				end
-			else
-				for i, v in pairs(game.Players:GetPlayers()) do
-					repeat wait() until v.Character
-					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
-						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth").Enabled = false
-					end
-				end
-			end
-		end
-	end
-end)
-
 repeat wait() until game.Players.LocalPlayer
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Bottle Health ESP",
@@ -353,7 +308,9 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 while wait(1) do
 	for i, v in pairs(game.Players:GetPlayers()) do
 		if v.Character then
-			giveESP(v)
+			if v.Name ~= game.Players.LocalPlayer.Name then
+				giveESP(v)
+			end
 		end
 	end
 end
