@@ -128,6 +128,7 @@ function giveESP(plr)
 		if not plr.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") then
 			local clone = BillboardGuiHealth:Clone()
 			clone.Parent = plr.Character:WaitForChild("Head")
+			clone.MaxDistance = getgenv().bottleHealthEspDistance
 			local clone2 = BillboardGuiName:Clone()
 			clone2.TextLabel.Text = plr.Name
 			clone2.Parent = plr.Character:WaitForChild("Head")
@@ -211,6 +212,7 @@ function giveESP(plr)
 		if not plr.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") then
 			local clone = BillboardGuiHealth:Clone()
 			clone.Parent = plr.Character:WaitForChild("Head")
+			clone.MaxDistance = getgenv().bottleHealthEspDistance
 			local clone2 = BillboardGuiName:Clone()
 			clone2.TextLabel.Text = plr.Name
 			clone2.Parent = plr.Character:WaitForChild("Head")
@@ -300,15 +302,6 @@ game.Players.PlayerAdded:Connect(function(aplr)
 	giveESP(aplr)
 end)
 
---Update
-while wait(5) do
-	for i, v in pairs(game.Players:GetPlayers()) do
-		if v.Character then
-			giveESP(v)
-		end
-	end
-end
-
 --Toggle Visiblity
 local UIS = game:GetService("UserInputService")
 
@@ -359,3 +352,14 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Bottle Health ESP",
 	Text = "f3 for names | f4 for health | + or = to increase | - to reset range"
 })
+
+--Update
+while wait(1) do
+	for i, v in pairs(game.Players:GetPlayers()) do
+		if v.Name ~= game.Players.LocalPlayer.Name then
+			if v.Character then
+				giveESP(v)
+			end
+		end
+	end
+end
