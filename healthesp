@@ -126,7 +126,7 @@ UICorner_Background.Parent = Background
 
 --Function
 function giveESP(plr)
-	repeat wait() until game.Players[plr.Name]
+	repeat wait() until game.Players[plr]
 	if plr.Name ~= game.Players.LocalPlayer.Name then
 		repeat wait() until plr.Character
 		if not plr.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") then
