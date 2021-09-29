@@ -300,7 +300,7 @@ end
 --Players
 
 for i, v in pairs(game.Players:GetPlayers())  do
-	if plr.Name ~= game.Players.LocalPlayer.Name then
+	if v.Name ~= game.Players.LocalPlayer.Name then
 		giveESP(v)
 	end
 end
