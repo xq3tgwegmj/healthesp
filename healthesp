@@ -356,7 +356,8 @@ end)
 wait(3)
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Bottle Health ESP",
-	Text = "f3 for names | f4 for health | + or = to increase | - to reset range"
+	Text = "f3 for names | f4 for health | + or = to increase | - to reset range",
+	Icon = "http://www.roblox.com/asset/?id=9405011319"
 })
 
 --Update
