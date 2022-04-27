@@ -1,7 +1,9 @@
-repeat wait() until game:IsLoaded()
+--F4 to toggle names
+--F3 to toggle healthbars
+
 repeat wait() until game.Players.LocalPlayer
 repeat wait() until game.Players.LocalPlayer.Character
-wait(3)
+
 -- Gui to Lua
 -- Version: 3.2
 
@@ -125,10 +127,16 @@ Background.ZIndex = 9
 UICorner_Background.Parent = Background
 
 --Function
-function giveESP(plr)
-	repeat wait() until game.Players[plr.Name]
+function giveESP(plr,added)
+    if added then
+        repeat wait() until plr
+        repeat wait() until game.Players[plr.Name]
+        repeat wait() until plr.Character
+    else
+        if not plr then return end
+    end
 	if plr.Name ~= game.Players.LocalPlayer.Name then
-		repeat wait() until plr.Character
+		if not plr.Character then return end
 		if not plr.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") then
 			local clone = BillboardGuiHealth:Clone()
 			clone.Parent = plr.Character:WaitForChild("Head")
@@ -209,164 +217,61 @@ function giveESP(plr)
 				local change = math.abs(currentHealth - health)
 				currentHealth = health
 			end)
+			
+			--Toggle Visiblity
+            game:GetService("UserInputService").InputBegan:connect(function(input, processed)
+            	if not processed then
+            		if input.KeyCode == Enum.KeyCode.F3 then
+            		    wait(0.1)
+            			if getgenv().bottleHealthEspVisible then
+            				clone.Enabled = true
+            			else
+            				clone.Enabled = false
+            			end
+            		elseif input.KeyCode == Enum.KeyCode.F4 then
+            		    wait(0.1)
+            			if getgenv().bottleHealthVisible then
+            				clone2.Enabled = true
+            			else
+                            clone2.Enabled = false
+            			end
+            		end
+            	end
+            end)
 		end
 	end
-
-	plr.CharacterAdded:Connect(function()
-		if not plr.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") then
-			local clone = BillboardGuiHealth:Clone()
-			clone.Parent = plr.Character:WaitForChild("Head")
-			clone.MaxDistance = getgenv().bottleHealthEspDistance
-			local clone2 = BillboardGuiName:Clone()
-			clone2.TextLabel.Text = plr.Name
-			clone2.Parent = plr.Character:WaitForChild("Head")
-			if plr.Team then
-				if plr.Team.Name == "Neutral" then
-					clone2.TextLabel.TextColor3 = Color3.fromRGB(255,255,255)
-				else
-					local Color = plr.Team.TeamColor.Color
-					local R,G,B R = Color.R * 255 G = Color.G * 255 B = Color.B * 255 
-					clone2.TextLabel.TextColor3 = Color3.fromRGB(R,G,B)
-				end
-			else
-				clone2.TextLabel.TextColor3 = Color3.fromRGB(255,255,255)
-			end
-
-			local UIS = game:GetService("UserInputService")
-			UIS.InputBegan:connect(function(input, processed)
-				if not processed then
-					if input.KeyCode == Enum.KeyCode.Equals then
-						getgenv().bottleHealthEspDistance = getgenv().bottleHealthEspDistance + 10
-						clone.MaxDistance = getgenv().bottleHealthEspDistance
-					elseif input.KeyCode == Enum.KeyCode.Minus then
-						getgenv().bottleHealthEspDistance = originalDistance
-						clone.MaxDistance = getgenv().bottleHealthEspDistance
-					end
-				end
-			end)
-
-			if not getgenv().bottleHealthEspVisible then
-				clone2.Enabled = false
-			end
-			if not getgenv().bottleHealthVisible then
-				clone.Enabled = false
-			end
-
-			local MyPlayer = plr
-			local frame = plr.Character.Head.BillboardGuiHealth.Handler.HealthSystem.HealthBar
-			local text = plr.Character.Head.BillboardGuiHealth.Handler.HealthSystem.TextLabel
-
-			local function UpdatePlayerInformation()
-				frame.BackgroundColor3 = Color3.fromRGB(85, 255, 127)
-			end
-
-			UpdatePlayerInformation()
-
-			local function onHealthChanged()
-				local human = MyPlayer.Character.Humanoid
-				local percent = human.Health / human.MaxHealth
-				text.Text = math.floor(human.Health).."/"..human.MaxHealth
-				frame.Size = UDim2.new(percent, 0, 1, 0)
-				if percent < .25 then
-					frame.BackgroundColor3 = Color3.fromRGB(255, 40, 20)
-				elseif percent < .5 then
-					frame.BackgroundColor3 = Color3.fromRGB(255, 255, 60)
-				else
-					frame.BackgroundColor3 = Color3.fromRGB(85, 255, 127)
-				end
-			end
-
-			local function onCharacterAdded(character)
-				local human = character:WaitForChild("Humanoid")
-				human.HealthChanged:Connect(onHealthChanged)
-				onHealthChanged()
-			end
-
-			MyPlayer.CharacterAdded:Connect(onCharacterAdded)
-			if MyPlayer.Character then
-				onCharacterAdded(MyPlayer.Character)
-			end
-
-			local humanoid = plr.Character.Humanoid
-			local currentHealth = humanoid.Health
-			humanoid.HealthChanged:Connect(function(health)
-				local change = math.abs(currentHealth - health)
-				currentHealth = health
-			end)
-		end
-	end)
 end
 
 --Players
 
 for i, v in pairs(game.Players:GetPlayers())  do
 	if v.Name ~= game.Players.LocalPlayer.Name then
-		giveESP(v)
+		giveESP(v,false)
+        v.CharacterAdded:Connect(function()
+            giveESP(v,false)
+		end)
 	end
 end
 game.Players.PlayerAdded:Connect(function(aplr)
-	giveESP(aplr)
+	giveESP(aplr,true)
+	aplr.CharacterAdded:Connect(function()
+        giveESP(v,false)
+    end)
 end)
 
 --Toggle Visiblity
-local UIS = game:GetService("UserInputService")
-
-UIS.InputBegan:connect(function(input, processed)
+game:GetService("UserInputService").InputBegan:connect(function(input, processed)
 	if not processed then
 		if input.KeyCode == Enum.KeyCode.F3 then
 			getgenv().bottleHealthEspVisible = not getgenv().bottleHealthEspVisible
-
-			if getgenv().bottleHealthEspVisible then
-				for i, v in pairs(game.Players:GetPlayers()) do
-					repeat wait() until v.Character
-					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
-						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName").Enabled = true
-					end
-				end
-			else
-				for i, v in pairs(game.Players:GetPlayers()) do
-					repeat wait() until v.Character
-					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
-						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName").Enabled = false
-					end
-				end
-			end
 		elseif input.KeyCode == Enum.KeyCode.F4 then
 			getgenv().bottleHealthVisible = not getgenv().bottleHealthVisible
-
-			if getgenv().bottleHealthVisible then
-				for i, v in pairs(game.Players:GetPlayers()) do
-					repeat wait() until v.Character
-					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
-						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth").Enabled = true
-					end
-				end
-			else
-				for i, v in pairs(game.Players:GetPlayers()) do
-					repeat wait() until v.Character
-					if v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth") and v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiName") then
-						v.Character:WaitForChild("Head"):FindFirstChild("BillboardGuiHealth").Enabled = false
-					end
-				end
-			end
 		end
 	end
 end)
 
-wait(3)
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Bottle Health ESP",
 	Text = "f3 for names | f4 for health | + or = to increase | - to reset range",
 	Icon = "http://www.roblox.com/asset/?id=9405011319"
 })
-
---Update
-while wait(1) do
-	for i, v in pairs(game.Players:GetPlayers()) do
-		if v.Name ~= game.Players.LocalPlayer.Name then
-			if v.Character then
-				giveESP(v)
-			end
-		end
-	end
-end
