@@ -1,5 +1,11 @@
---F4 to toggle names
---F3 to toggle healthbars
+--[[
+Health bar + names ESP
+KEYBINDS:
+ - [ F4 ]       | Toggle names
+ - [ F3 ]       | Toggle healthbars
+ - [ + ] OR [=] | Increase healthbar distance
+ - [ - ]        | Decrease healthbar distance
+]]
 
 repeat wait() until game.Players.LocalPlayer
 repeat wait() until game.Players.LocalPlayer.Character
