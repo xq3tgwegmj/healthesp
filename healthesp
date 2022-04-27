@@ -1,10 +1,10 @@
 --[[
 Health bar + names ESP
 KEYBINDS:
- - [ F4 ]       | Toggle names
- - [ F3 ]       | Toggle healthbars
- - [ + ] OR [=] | Increase healthbar distance
- - [ - ]        | Decrease healthbar distance
+ - [ F4 ]         | Toggle names
+ - [ F3 ]         | Toggle healthbars
+ - [ + ] OR [ = ] | Increase healthbar distance
+ - [ - ]          | Decrease healthbar distance
 ]]
 
 repeat wait() until game.Players.LocalPlayer
